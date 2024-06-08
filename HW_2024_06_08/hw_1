@@ -1,0 +1,204 @@
+ 
+--Домашнее задание по SQL № 2
+--Задача 1. Лысые злодеи из 90-х годов
+SELECT 
+    name AS имя, 
+    year AS год, 
+    appearances AS частота_появления
+FROM marvelCharacters
+WHERE year BETWEEN 1990 AND 1999 AND
+      hair = "Bald" AND
+      align = "Bad Characters";
+
+--Задача 2. Герои с тайной идернтичностью и необычными глазами
+SELECT 
+    name AS имя, 
+    year AS год, 
+    eye AS цвет_глаз
+FROM marvelCharacters
+WHERE identify = "Secret Identity" AND
+      (eye NOT IN ("Green Eyes", "Blue Eyes", "Brown Eyes"));
+     
+      
+--Задача 3. Персонажи с изменяющимся цветом волос:
+SELECT 
+    name AS имя, 
+    hair AS цвет_волос
+FROM marvelCharacters
+WHERE hair = "Variable Hair";
+
+
+--Задача 4. Женские персонажи с редким цветом глаз
+SELECT 
+    name AS имя, 
+    eye AS цвет_глаз    
+FROM marvelCharacters
+WHERE sex="Female Characters" AND
+     (eye="Gold Eyes" OR eye="Amber Eyes");
+     
+--Задача 5. Персонажи без двойной идентичности. Отсортированные по году появления:
+SELECT 
+    name AS имя, 
+    year AS год_первого_появления    
+FROM marvelCharacters
+WHERE identify = "No Dual Identity" 
+ORDER BY
+    eye DESC;
+
+--Задача 6. Герои и злодеи с необычными прическами
+SELECT 
+    name, 
+    align,
+    hair
+FROM marvelCharacters
+WHERE hair NOT IN ("Blond Hair", "Red Hair", "Brown Hair", "Black Hair");
+
+--Задача 7. Персонажи. появившиеся в определенное десятилетие
+SELECT 
+    name, 
+    year
+FROM marvelCharacters
+WHERE year BETWEEN 1960 AND 1969; 
+
+--Задача 8. Персонажи с уникальным сочетанием глаз и волос
+SELECT 
+    name, 
+    eye,
+    hair
+FROM marvelCharacters
+WHERE eye="Yellow Eyes" AND hair="Red Hair"; 
+
+--Задача 9. Персонажи с ограниченным количеством появления
+SELECT 
+    name AS имя, 
+    appearances AS частота_появления
+FROM marvelCharacters
+WHERE appearances < 10; 
+
+
+--Задача 10. Персонажи с наибольшим количеством появления
+SELECT 
+    name AS имя, 
+    appearances AS частота_появления
+FROM marvelCharacters
+LIMIT 5;
+ORDER BY
+    appearances DESC;
+
+
+--Задача 11. Персонажи появившиеся только в одном десятилетии
+SELECT 
+    name, 
+    year
+FROM marvelCharacters
+WHERE year BETWEEN 2000 AND 2009; 
+
+--Задача 12. Персонажи с самыми редками цветами глаз
+SELECT 
+    name, 
+    eye
+FROM marvelCharacters
+WHERE eye IN ("Magenta Eyes","Pink Eyes","Violet Eyes"); 
+
+
+--Задача 13. Герои с публичной идентичностью, отсортированные по году
+SELECT 
+    name,
+    identify, 
+    year
+FROM marvelCharacters
+WHERE identify="Public Identity"
+ORDER BY
+      year;
+
+
+--Задача 14. Персонажи к конкретными цветом волом и глаз, упорядоченные по имени
+SELECT 
+    name,
+    hair, 
+    eye
+FROM marvelCharacters
+WHERE hair="Black Hair" AND 
+      eye="Green Eyes"
+ORDER BY
+      name;
+
+
+--Задача 15. Злодеи с нестандартными физическими характеристиками
+SELECT 
+    name,
+    sex
+FROM marvelCharacters
+WHERE sex NOT IN ("Male Characters","Female Characters") AND
+      align="Bad Characters";
+
+
+--Задача 16. Персонажи с наибольшим появлением по полу
+SELECT 
+    name,
+    sex,
+    MAX(appearances)
+FROM marvelCharacters
+WHERE sex IN ("Male Characters","Female Characters")
+GROUP BY
+      sex;
+
+
+--Задача 17. Сравнение популярности персонажей по цвету волос и глаз
+SELECT 
+    name,
+    hair,
+    eye, 
+    SUM(appearances)
+FROM marvelCharacters
+GROUP BY
+      hair,
+      eye
+ORDER BY
+    SUM(appearances) DESC;
+      
+
+--Задача 18. Персонажи с максимальным количеством появлений в десятилетие
+SELECT 
+    CASE
+         WHEN year BETWEEN 1940 AND 1949 THEN "1940-e"
+         WHEN year BETWEEN 1950 AND 1959 THEN "1950-e"
+         WHEN year BETWEEN 1960 AND 1969 THEN "1960-e"
+         WHEN year BETWEEN 1970 AND 1979 THEN "1970-e"
+         WHEN year BETWEEN 1980 AND 1989 THEN "1980-e"
+         WHEN year BETWEEN 1990 AND 1999 THEN "1990-e"
+         WHEN year BETWEEN 2000 AND 2009 THEN "2000-e"
+         WHEN year BETWEEN 2010 AND 2019 THEN "2010-e"
+         WHEN year BETWEEN 2020 AND 2029 THEN "2020-e"
+    END AS year_group,
+    name,
+    MAX(appearances)
+FROM marvelCharacters
+WHERE year>=1940
+GROUP BY
+     year_group;
+
+
+--Задача 19. Герои и злодеи 1980-х
+SELECT 
+    align,
+    COUNT() AS "Количество новых персонажей"
+FROM marvelCharacters
+WHERE year BETWEEN 1980 AND 1989
+      AND align IN ("Bad Characters","Good Characters")
+GROUP BY
+    align;
+
+
+--Задача 20. Самые популярные прически супергероев
+SELECT 
+    hair,
+    COUNT(appearances) AS "Количество появлений прически"
+FROM marvelCharacters
+WHERE hair NOT NULL
+GROUP BY
+    hair
+ORDER BY
+    COUNT(appearances) DESC LIMIT 3;
+
+
