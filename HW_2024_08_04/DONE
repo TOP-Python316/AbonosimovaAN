@@ -1,0 +1,98 @@
+Все запросы выполняйте на последней версии БД.
+После каждого вопроса пишите текст запроса.
+Если боитесь повредить базу данных, сделайте её резервную копию.
+Если с 4-ым заданием никак не выходит, то пропустите его.
+
+### Создание (Create)
+1. **Создайте новую карточку с вопросом "Что такое Django?" и ответом "Django — это высокоуровневый веб-фреймворк на языке Python."**
+	1)  cat_ID = Category.objects.get(id=6)
+ 	    new_card = Card.objects.create(question="Что такое Django?", answer="Django — это высокоуровневый веб-фреймворк на языке Python.", category=cat_ID)
+	    ###Категория не может быть пустой
+2. **Создайте новую категорию с именем "Программирование".**
+	2) new_category = Category.objects.create(name="Программирование")
+3. **Создайте новый тег с именем "Python".**
+	3) tag_name = "Python"
+	   new_tag_created = Tag.objects.get_or_create(name=tag_name)  ### P.S. такой тег уже существует
+4. **Создайте новую карточку и присвойте ей категорию "Программирование" и тег "Python".**
+	4) cat_ID = Category.objects.get(id=8)
+           tag_ID = Tag.objects.get(id="1256")
+	   new_card = Card.objects.create(question="В каком году создан Python?", answer="Python создан в 1991 году.",category=cat_ID, tags=tag_ID) ###запрос не работает
+5. **Создайте новую карточку и установите её статус как "Проверено".**
+	5) cat_ID = Category.objects.get(id=6)
+	   new_card = Card.objects.create(question="Что такое CSS?", answer="CSS - это каскадные таблицы стилей.", category=cat_ID, status=1)
+`````````` ###Категория не может быть пустой
+
+
+### Чтение (Read)
+6. **Получите все карточки, которые имеют статус "Проверено".**
+	6) card = Card.objects.get(status=1)
+7. **Получите все карточки, которые содержат тег с именем "Python".**
+	7) cards_with_tags = Tag.objects.get(name="python").cards.all()
+8. **Получите все карточки, которые принадлежат категории "Программирование".**
+	8) cat_ID = Category.objects.get(id=8)
+           card = Card.objects.get(category=cat_ID)
+9. **Получите все карточки, которые были загружены в течение последних 7 дней.**
+	9) card = Card.objects.get(upload_date__gte="2024-08-01")    
+10. **Получите все карточки, которые имеют более 10 просмотров.**
+	10) card = Card.objects.get(views__gt=10)
+
+
+### Обновление (Update)
+11. **Обновите статус карточки с id=1 на "Проверено".**
+	11) card = Card.objects.get(id=1)
+	    card.status = 1
+	    card.save()
+12. **Увеличьте количество просмотров карточки с id=1 на 1.**
+	12) card = Card.objects.get(id=1)
+	    card.views += 1
+	    card.save()
+13. **Измените категорию карточки с id=1 на "Программирование".**
+	13) card = Card.objects.get(id=1)
+	    cat_ID = Category.objects.get(id=8)
+	    card.category=cat_ID
+	    card.save()
+14. **Добавьте тег "Python" к карточке с id=1.**
+            ### код программы не доработан:
+	14) tag_ = Tag.objects.get(name="Python").id
+	    card_ = Card.objects.get(id=1).id
+            card_tag = CardTag.objects.create(card_, tag_)
+15. **Обновите вопрос и ответ карточки с id=1 на новые значения.**
+	15) card = Card.objects.get(id=1)
+	    card.question ="Как правильно произносится Python на русском языке"
+	    card.answer ="Правильно: Пайтон"
+	    card.save()
+
+
+### Удаление (Delete)
+16. **Удалите карточку с id=1.**
+	16) card = Card.objects.get(id=1)
+	    card.delete()
+17. **Удалите категорию с именем "Программирование".**
+	17) category = Category.objects.get(name="Программирование")
+	    category.delete()
+18. **Удалите тег с именем "Python".**
+	18) tag = Tag.objects.get(name="python")
+	    tag.delete()
+19. **Удалите все карточки, которые имеют статус "Не проверено".**
+	19) card = Card.objects.filter(status=1)
+	    card.delete()
+20. **Удалите все карточки, которые не имеют тегов.**
+	
+
+### Комбинированные задачи с использованием Q и F классов
+21. **Получите все карточки, которые имеют статус "Проверено" и принадлежат категории "Программирование".**
+	21) cat_ID = Category.objects.get(id=7)
+	    cards = Card.objects.filter(Q(status__icontains=1) & Q(cat_ID__icontains=7))
+           ### не решено
+22. **Получите все карточки, которые имеют статус "Проверено" или принадлежат категории "Программирование".**
+	22) ### не решено
+23. **Увеличьте количество просмотров всех карточек, которые имеют статус "Проверено", на 1.**
+	23) Card.objects.filter(Q(status__icontains=1)).update(views=F("views") + 1)
+24. **Получите все карточки, которые имеют более 10 просмотров и менее 5 добавлений в избранное.**
+	24) cards = Card.objects.filter(Q(views__gt=10) & Q(adds__lt=5))
+25. **Получите все карточки, которые были загружены в течение последних 7 дней и имеют тег "Python".**
+	25) ### не решено
+
+
+
+Эти задачи охватывают основные операции CRUD и включают использование лукапов, Q и F классов для более сложных запросов.
